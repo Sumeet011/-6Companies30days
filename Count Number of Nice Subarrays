@@ -1,0 +1,47 @@
+Question : Count Number of Nice Subarrays
+Difficulty : Medium
+
+Given an array of integers nums and an integer k. A continuous subarray is called nice if there are k odd numbers on it.
+Return the number of nice sub-arrays.
+
+Solution : 
+class Solution {
+public:
+    int numberOfSubarrays(vector<int>& nums, int k) {
+        int n = nums.size();
+        int previous_index = -1;
+        int current = 0;
+        int next = 0;
+        int end = 0;
+        int ans = 0;
+
+        while (current < n) {
+            while (current < n && nums[current] % 2 == 0) {
+                current++;
+            }
+            if (current == n) return ans;
+
+            int t = 1;
+            next = current + 1;
+            while (next < n && t < k) {
+                if (nums[next] % 2 != 0) {
+                    t++;
+                }
+                next++;
+            }
+            if (t < k) return ans;
+
+            end = next;
+            while (end < n && nums[end] % 2 == 0) {
+                end++;
+            }
+
+            ans += (current - previous_index) * (end - next + 1);
+
+            previous_index = current;
+            current++;
+        }
+
+        return ans;
+    }
+};

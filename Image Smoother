@@ -1,0 +1,73 @@
+📷 661. Image Smoother
+Difficulty: Easy
+📝 Problem Description:
+An image smoother is a filter of size 3x3 that can be applied to each cell of an image.
+For each cell in the image, we calculate the average of the current cell and the eight surrounding cells (i.e., a total of 9 cells in the blue smoother).
+If one or more surrounding cells are not present (e.g., on the borders of the image), those are not considered in the average calculation.
+For instance, in the red smoother, only the cells that are present (usually 4 cells) will be used for the averaging.
+
+Solution :
+class Solution {
+public:
+    vector<vector<int>> imageSmoother(vector<vector<int>>& img) {
+        int R = img.size();
+        int C = img[0].size();
+        vector<vector<int>> Ans(R, vector<int>(C));
+
+        for (int i = 0; i < R; i++) {
+            for (int j = 0; j < C; j++) {
+                int S = img[i][j];  // Start with the current pixel
+                int N = 1;  // Initialize N to 1 (for the current pixel itself)
+
+                // UP
+                if (i - 1 >= 0) {
+                    S += img[i - 1][j];
+                    N++;
+                    // UP RIGHT
+                    if (j + 1 < C) {
+                        S += img[i - 1][j + 1];
+                        N++;
+                    }
+                    // UP LEFT
+                    if (j - 1 >= 0) {
+                        S += img[i - 1][j - 1];
+                        N++;
+                    }
+                }
+
+                // LEFT
+                if (j - 1 >= 0) {
+                    S += img[i][j - 1];
+                    N++;
+                }
+
+                // DOWN
+                if (i + 1 < R) {
+                    S += img[i + 1][j];
+                    N++;
+                    // DOWN LEFT
+                    if (j - 1 >= 0) {
+                        S += img[i + 1][j - 1];
+                        N++;
+                    }
+                    // DOWN RIGHT
+                    if (j + 1 < C) {
+                        S += img[i + 1][j + 1];
+                        N++;
+                    }
+                }
+
+                // RIGHT
+                if (j + 1 < C) {
+                    S += img[i][j + 1];
+                    N++;
+                }
+
+                // Assign the average of S and N to the corresponding pixel in Ans
+                Ans[i][j] = S / N;
+            }
+        }
+
+        return Ans;
+    }
+};

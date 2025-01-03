@@ -1,0 +1,71 @@
+Question : You are given two 0-indexed strings source and target, both of length n and consisting of lowercase English letters.
+You are also given two 0-indexed character arrays original and changed, and an integer array cost, where cost[i] represents the cost of changing the character original[i] to the character changed[i].
+You start with the string source. In one operation,
+you can pick a character x from the string and change it to the character y at a cost of z if there exists any index j such that cost[j] == z, original[j] == x, and changed[j] == y.
+Return the minimum cost to convert the string source to the string target using any number of operations. 
+If it is impossible to convert source to target, return -1.
+Note that there may exist indices i, j such that original[j] == original[i] and changed[j] == changed[i].
+
+Difficulty : Medium 
+Solution : class Solution {
+public:
+    const long long INF = LLONG_MAX;
+    const int ALPHABET_SIZE = 26;
+
+    int charToIndex(char c) {
+        return c - 'a';
+    }
+
+    long long minimumCost(string source, string target, vector<char>& original, vector<char>& changed, vector<int>& cost) {
+        vector<vector<pair<int, long long>>> graph(ALPHABET_SIZE);
+
+        int n = original.size();
+        for (int i = 0; i < n; ++i) {
+            int u = charToIndex(original[i]);
+            int v = charToIndex(changed[i]);
+            graph[u].push_back({v, cost[i]});
+        }
+
+        vector<vector<long long>> minCost(ALPHABET_SIZE, vector<long long>(ALPHABET_SIZE, INF));
+
+        for (int i = 0; i < ALPHABET_SIZE; ++i) {
+            priority_queue<pair<long long, int>, vector<pair<long long, int>>, greater<pair<long long, int>>> pq;
+            pq.push({0, i});
+            minCost[i][i] = 0;
+            
+            while (!pq.empty()) {
+                int u = pq.top().second;
+                long long currentCost = pq.top().first;
+                pq.pop();
+
+                if (currentCost > minCost[i][u]) continue;
+
+                for (auto& neighbor : graph[u]) {
+                    int v = neighbor.first;
+                    long long edgeCost = neighbor.second;
+                    long long newCost = currentCost + edgeCost;
+                    
+                    if (newCost < minCost[i][v]) {
+                        minCost[i][v] = newCost;
+                        pq.push({newCost, v});
+                    }
+                }
+            }
+        }
+
+        long long totalCost = 0;
+        int m = source.length();
+        for (int i = 0; i < m; ++i) {
+            int u = charToIndex(source[i]);
+            int v = charToIndex(target[i]);
+            
+            if (minCost[u][v] == INF) {
+                return -1;
+            }
+            
+            totalCost += minCost[u][v];
+        }
+
+        return totalCost;
+    }
+};

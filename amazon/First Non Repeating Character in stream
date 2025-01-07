@@ -1,0 +1,26 @@
+Question : First Unique Character in a String
+
+Description : 
+Given a string s, find the first non-repeating character in it and return its index. If it does not exist, return -1.
+
+Solution : class Solution {
+public:
+    int firstUniqChar(string s) {
+        unordered_map<char, int> m;
+
+        // Count the frequency of each character
+        for (char c : s) {
+            m[c]++;
+        }
+
+        // Find the first character with a frequency of 1
+        for (int i = 0; i < s.length(); i++) {
+            if (m[s[i]] == 1) {
+                return i; // Return the index of the first unique character
+            }
+        }
+
+        // If no unique character is found, return -1
+        return -1;
+    }
+};

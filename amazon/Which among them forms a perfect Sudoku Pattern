@@ -1,0 +1,40 @@
+Question : Valid Sudoku
+Descritption : Determine if a 9 x 9 Sudoku board is valid. Only the filled cells need to be validated according to the following rules:
+
+Each row must contain the digits 1-9 without repetition.
+Each column must contain the digits 1-9 without repetition.
+Each of the nine 3 x 3 sub-boxes of the grid must contain the digits 1-9 without repetition.
+Note:
+A Sudoku board (partially filled) could be valid but is not necessarily solvable.
+Only the filled cells need to be validated according to the mentioned rules.
+
+Solution : 
+class Solution {
+public:
+    bool isValidSudoku(vector<vector<char>>& board) {
+        int row[9][9] = {0};
+        int col[9][9] = {0};
+        int subMat[3][3][9] = {0};
+        for (int i = 0; i < 9; i++) {
+            for (int j = 0; j < 9; j++) {
+                if (board[i][j] == '.')
+                    continue;
+                else {
+                    int num = board[i][j] - '1';
+                    if (row[i][num] == 1 or col[j][num] == 1 or
+                        subMat[i / 3][j / 3][num] == 1)
+                        return false;
+                    row[i][num] = 1;
+                    col[j][num] = 1;
+                    subMat[i / 3][j / 3][num] = 1;
+                }
+            }
+        }
+        return true;
+    }
+};
+void FastIO() {
+    ios_base::sync_with_stdio(0);
+    cin.tie(0);
+    // cout.tie(0);
+}

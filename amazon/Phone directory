@@ -1,0 +1,47 @@
+Question : Phone directory
+Description : Given a list of contacts contact[] of length n where each contact is a string which exist in a phone directory and a query string s.
+The task is to implement a search query for the phone directory. 
+Run a search query for each prefix p of the query string s (i.e. from  index 1 to |s|) that prints all the distinct contacts which have the same prefix as p in lexicographical increasing order.
+Please refer the explanation part for better understanding.Note: If there is no match between query and contacts, print "0".
+
+Solution : class Solution {
+public:
+    vector<vector<string>> displayContacts(int n, string contact[], string s) {
+        unordered_map<string, unordered_map<string, bool>> M; // Tracks substrings and their contacts
+        map<string, set<string>> P; // Stores substrings and their sorted set of contacts
+
+        // Populate the maps
+        for (int i = 0; i < n; i++) {
+            string prefix;
+            for (int j = 0; j < contact[i].length(); j++) {
+                prefix += contact[i][j]; // Build substrings
+                
+                // Insert into unordered_map M
+                if (M[prefix].find(contact[i]) == M[prefix].end()) {
+                    M[prefix][contact[i]] = true;
+                    P[prefix].insert(contact[i]); // Insert into map P for sorted order
+                }
+            }
+        }
+
+        // Prepare the answer
+        vector<vector<string>> Ans;
+
+        // Iterate over all possible substrings from the input string
+        string prefix;
+        for (char ch : s) {
+            prefix += ch;
+            if (P.find(prefix) != P.end()) {
+                // Convert the set into a vector and add to the result
+                vector<string> currentContacts(P[prefix].begin(), P[prefix].end());
+                Ans.push_back(currentContacts);
+            } else {
+                // No matches for this prefix
+                Ans.push_back({"0"});
+            }
+        }
+
+        return Ans;
+    }
+};
+

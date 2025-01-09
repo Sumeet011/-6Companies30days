@@ -1,0 +1,46 @@
+Question : Delete N nodes after M nodes of a linked list
+
+Descritption : Given a linked list, delete n nodes after skipping m nodes of a linked list until the last of the linked list.
+
+Solution : 
+class Solution {
+  public:
+    Node* linkdelete(Node* head, int n, int m) {
+        // code here
+      Node* Temp = head;
+Node* ans = Temp;
+bool t=true;
+while (Temp != NULL && Temp->next != NULL) {
+    // Move Temp by m-1 steps
+    int count;
+    if(t){
+        count=m-1;
+        t=false;
+    }
+    else{
+     count = m;
+    }
+    while (Temp != NULL && count > 0) {
+        Temp = Temp->next;
+        count--;
+    }
+
+    if (Temp == NULL || Temp->next == NULL) {
+        return ans;
+    }
+
+    Node* Sec = Temp->next;
+    int sec_count = n;
+    while (Sec != NULL && sec_count > 0) {
+        Sec = Sec->next;
+        sec_count--;
+    }
+
+    // Connect Temp to Sec
+    Temp->next = Sec;
+}
+return ans;
+
+
+    }
+};

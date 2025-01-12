@@ -1,0 +1,37 @@
+Question : Maximum Length of Repeated Subarray
+
+Description : Given two integer arrays nums1 and nums2, return the maximum length of a subarray that appears in both arrays.
+
+Solution : class Solution {
+public:
+    int findLength(vector<int>& nums1, vector<int>& nums2) {
+    int m = nums1.size(), n = nums2.size();
+    int maxLength = 0;
+    
+    // Create a hashmap to store the indices of nums1
+    unordered_map<int, vector<int>> indices_map;
+    for (int i = 0; i < m; ++i) {
+        indices_map[nums1[i]].push_back(i);
+    }
+
+    // Iterate through nums2 and find common elements
+    for (int j = 0; j < n; ++j) {
+        if (indices_map.find(nums2[j]) != indices_map.end()) {
+            for (int i : indices_map[nums2[j]]) {
+                if (m - i <= maxLength || n - j <= maxLength) {
+                    continue;
+                }
+                
+                int len = 0;
+                // Compare subarrays starting from this index
+                while (i + len < m && j + len < n && nums1[i + len] == nums2[j + len]) {
+                    len++;
+                }
+                maxLength = max(maxLength, len);
+            }
+        }
+    }
+
+    return maxLength;
+}
+};

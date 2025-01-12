@@ -1,0 +1,29 @@
+Question : Sort Characters By Frequency
+
+Description : Given a string s, sort it in decreasing order based on the frequency of the characters. The frequency of a character is the number of times it appears in the string.
+Return the sorted string. If there are multiple answers, return any of them.
+
+SOlution : 
+class Solution {
+public:
+    string frequencySort(string s) {
+        unordered_map<char, int> freqMap;
+        for (char c : s) {
+            freqMap[c]++;
+        }
+
+        map<int, vector<char>, greater<int>> groupedMap;
+        for (const auto& [ch, freq] : freqMap) {
+            groupedMap[freq].push_back(ch);
+        }
+
+        string result;
+        for (const auto& [freq, chars] : groupedMap) {
+            for (char c : chars) {
+                result.append(freq, c); // Append the character 'freq' times
+            }
+        }
+
+        return result;
+    }
+};

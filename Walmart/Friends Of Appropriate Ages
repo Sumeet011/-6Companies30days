@@ -1,0 +1,36 @@
+Question : Friends Of Appropriate Ages
+
+Descrption : There are n persons on a social media website. You are given an integer array ages where ages[i] is the age of the ith person.
+A Person x will not send a friend request to a person y (x != y) if any of the following conditions is true:
+age[y] <= 0.5 * age[x] + 7
+age[y] > age[x]
+age[y] > 100 && age[x] < 100
+Otherwise, x will send a friend request to y.
+Note that if x sends a request to y, y will not necessarily send a request to x. Also, a person will not send a friend request to themself.
+Return the total number of friend requests made.
+
+Solution : class Solution {
+public:
+    int numFriendRequests(vector<int>& ages) {
+        vector<int> M(121, 0);  // M[i] will store the count of people of age i (range 0-120)
+        
+        for (int a : ages) {
+            M[a]++;
+        }
+
+        int ANS = 0;
+
+        for (int a : ages) {
+            int X = 0.5 * a + 7;  
+            for (int i = 1; i < 121; i++) {
+                // Check the conditions for sending a friend request
+                if (i > X && i <= a && (i <= 100 || a >= 100)) {
+                    ANS += M[i];  // Add the frequency of valid recipients of age 'i'
+                    if(i==a) ANS--;
+                }
+            }
+        }
+
+        return ANS;
+    }
+};

@@ -1,0 +1,19 @@
+Question : Verify Preorder Serialization of a Binary Tree
+
+Description : One way to serialize a binary tree is to use preorder traversal. When we encounter a non-null node,
+we record the node's value. If it is a null node, we record using a sentinel value such as '#'.
+
+Solution : class Solution {
+public:
+    bool isValidSerialization(string preorder) {
+        stringstream ss(preorder);
+        string curr;
+        int nodes = 1;
+        while (getline(ss, curr, ',')) {
+            nodes--;
+            if (nodes < 0) return false;
+            if (curr != "#") nodes += 2;
+        }
+        return nodes == 0;
+    }
+};

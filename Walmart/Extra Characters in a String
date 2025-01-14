@@ -1,0 +1,30 @@
+Question : Extra Characters in a String
+
+Description : You are given a 0-indexed string s and a dictionary of words dictionary. You have to break s into one or more non-overlapping substrings such that each substring is present in dictionary. 
+There may be some extra characters in s which are not present in any of the substrings.
+Return the minimum number of extra characters left over if you break up s optimally.
+
+Solution : class Solution {
+public:
+    int minExtraChar(string s, vector<string>& dictionary) {
+        int n = s.length();
+   vector<int> dp(n + 1, 0); 
+
+    vector<std::string> sortedDict = dictionary;
+    sort(sortedDict.begin(), sortedDict.end(), [](const std::string& a, const std::string& b) {
+        return a.length() > b.length();
+    });
+
+    for (int i = n - 1; i >= 0; --i) {
+        dp[i] = dp[i + 1];
+        for (const string& word : sortedDict) {
+            if (i + word.length() <= n && s.substr(i, word.length()) == word) {
+                dp[i] = max(dp[i], (int)word.length() + dp[i + word.length()]);
+            }
+        }
+    }
+
+    return s.length()-dp[0]; 
+        
+    }
+};

@@ -1,0 +1,34 @@
+Question : Maximum Product After K Increments
+
+Description : You are given an array of non-negative integers nums and an integer k.
+In one operation, you may choose any element from nums and increment it by 1.
+Return the maximum product of nums after at most k operations. Since the answer may be very large,
+return it modulo 109 + 7. Note that you should maximize the product before taking the modulo. 
+
+Solution : 
+class Solution {
+public:
+    int maximumProduct(vector<int>& nums, int k) {
+        const int MOD = 1e9 + 7;
+      priority_queue<int, vector<int>, greater<int>> minHeap;
+
+        for (int num : nums) {
+            minHeap.push(num);
+        }
+
+        for (int i = 0; i < k; ++i) {
+            int minElem = minHeap.top();
+            minHeap.pop();
+            minElem++;
+            minHeap.push(minElem);
+        }
+
+        long long product = 1;
+        while (!minHeap.empty()) {
+            product = (product * minHeap.top()) % MOD;
+            minHeap.pop();
+        }
+
+        return (int)product;
+    }
+};

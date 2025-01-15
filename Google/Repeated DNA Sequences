@@ -1,0 +1,37 @@
+Question : Repeated DNA Sequences
+
+Descritption : The DNA sequence is composed of a series of nucleotides abbreviated as 'A', 'C', 'G', and 'T'.
+For example, "ACGAATTCCG" is a DNA sequence.
+When studying DNA, it is useful to identify repeated sequences within the DNA.
+Given a string s that represents a DNA sequence,
+return all the 10-letter-long sequences (substrings) that occur more than once in a DNA molecule. You may return the answer in any order.
+
+Solution : class Solution {
+public:
+    vector<string> findRepeatedDnaSequences(string s) {
+        deque<char> dq;
+        unordered_map<string, int> M;
+        vector<string> result;
+        
+        for (int i = 0; i < s.length(); i++) {
+            dq.push_back(s[i]); 
+            
+            if (dq.size() > 10) {
+                dq.pop_front();  
+            }
+
+            if (dq.size() == 10) {  
+                string sequence(dq.begin(), dq.end());
+                M[sequence]++;  
+            }
+        }
+
+        for (auto& entry : M) {
+            if (entry.second > 1) {
+                result.push_back(entry.first);
+            }
+        }
+
+        return result;
+    }
+};

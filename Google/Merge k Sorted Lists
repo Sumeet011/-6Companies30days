@@ -1,0 +1,34 @@
+Question : Merge k Sorted Lists
+
+Description : You are given an array of k linked-lists lists, each linked-list is sorted in ascending order.
+Merge all the linked-lists into one sorted linked-list and return it.
+
+Solution : 
+class Solution {
+public:
+    ListNode* mergeKLists(vector<ListNode*>& lists) {
+        vector<int> values;
+
+        // Collect all values from the linked lists
+        for (ListNode* list : lists) {
+            while (list != nullptr) {
+                values.push_back(list->val);
+                list = list->next;
+            }
+        }
+
+        // Sort the values
+        sort(values.begin(), values.end());
+
+        // Create a new linked list from the sorted values
+        ListNode* dummy = new ListNode();  // Dummy node to simplify list construction
+        ListNode* current = dummy;
+
+        for (int val : values) {
+            current->next = new ListNode(val);
+            current = current->next;
+        }
+
+        return dummy->next;  // Return the head of the new list
+    }
+};

@@ -1,0 +1,42 @@
+Question : Maximize Area of Square Hole in Grid
+
+Description : You are given the two integers, n and m and two integer arrays, hBars and vBars. The grid has n + 2 horizontal and m + 2 vertical bars, creating 1 x 1 unit cells. The bars are indexed starting from 1.
+You can remove some of the bars in hBars from horizontal bars and some of the bars in vBars from vertical bars. Note that other bars are fixed and cannot be removed.
+Return an integer denoting the maximum area of a square-shaped hole in the grid, after removing some bars (possibly none).
+
+Solution : class Solution {
+public:
+    int maximizeSquareHoleArea(int n, int m, vector<int>& hBars, vector<int>& vBars) {
+        sort(hBars.begin(), hBars.end());
+        sort(vBars.begin(), vBars.end());
+
+        auto findLargestConsecutive = [](vector<int>& bars) {
+            int maxLength = 0, currentLength = 1;
+            int lowerPoint = bars[0], upperPoint = bars[0];
+            int tempLower = bars[0];
+
+            for (int i = 1; i < bars.size(); ++i) {
+                if (bars[i] == bars[i - 1] + 1) {
+                    currentLength++;
+                    if (currentLength > maxLength) {
+                        maxLength = currentLength;
+                        lowerPoint = tempLower;
+                        upperPoint = bars[i];
+                    }
+                } else {
+                    currentLength = 1;
+                    tempLower = bars[i];
+                }
+            }
+
+            return make_tuple(maxLength, lowerPoint, upperPoint);
+        };
+
+        auto [hMaxLength, hLowerPoint, hUpperPoint] = findLargestConsecutive(hBars);
+
+        auto [vMaxLength, vLowerPoint, vUpperPoint] = findLargestConsecutive(vBars);
+        int M=min(-hLowerPoint+hUpperPoint+2,vUpperPoint-vLowerPoint+2);
+        return M*M;
+        
+    }
+};

@@ -1,0 +1,52 @@
+Question : LRU Cache
+
+Description : Design a data structure that follows the constraints of a Least Recently Used (LRU) cache.
+Implement the LRUCache class:
+LRUCache(int capacity) Initialize the LRU cache with positive size capacity.
+int get(int key) Return the value of the key if the key exists, otherwise return -1.
+void put(int key, int value) Update the value of the key if the key exists. Otherwise, add the key-value pair to the cache. If the number of keys exceeds the capacity from this operation, evict the least recently used key.
+The functions get and put must each run in O(1) average time complexity.
+
+Solution : class LRUCache {
+    int Size = 0;
+    int Max;
+    list<int> cacheOrder; 
+    unordered_map<int, int> M; 
+    unordered_map<int, list<int>::iterator> cachePos; 
+
+public:
+    LRUCache(int capacity) {
+        Max = capacity;
+    }
+
+    int get(int key) {
+        if (M.find(key) != M.end()) {
+            cacheOrder.erase(cachePos[key]);
+            cacheOrder.push_front(key);
+            cachePos[key] = cacheOrder.begin();
+            return M[key];
+        }
+        return -1;
+    }
+
+    void put(int key, int value) {
+        if (M.find(key) != M.end()) {
+            M[key] = value;
+            cacheOrder.erase(cachePos[key]);
+            cacheOrder.push_front(key);
+            cachePos[key] = cacheOrder.begin();
+        } else {
+            if (Size == Max) {
+                int lru = cacheOrder.back();
+                cacheOrder.pop_back();
+                cachePos.erase(lru);
+                M.erase(lru);
+                Size--;
+            }
+            M[key] = value;
+            cacheOrder.push_front(key);
+            cachePos[key] = cacheOrder.begin();
+            Size++;
+        }
+    }
+};

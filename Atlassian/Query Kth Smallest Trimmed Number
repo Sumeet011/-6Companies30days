@@ -1,0 +1,66 @@
+Question : Query Kth Smallest Trimmed Number
+
+Description : You are given a 0-indexed array of strings nums, where each string is of equal length and consists of only digits.
+You are also given a 0-indexed 2D integer array queries where queries[i] = [ki, trimi]. For each queries[i], you need to:
+Trim each number in nums to its rightmost trimi digits.
+Determine the index of the kith smallest trimmed number in nums. If two trimmed numbers are equal, the number with the lower index is considered to be smaller.
+Reset each number in nums to its original length.
+Return an array answer of the same length as queries, where answer[i] is the answer to the ith query.
+Note:To trim to the rightmost x digits means to keep removing the leftmost digit, until only x digits remain.
+Strings in nums may contain leading zeros.
+
+Solution : class Solution {
+public:
+    vector<int> smallestTrimmedNumbers(vector<string>& nums, vector<vector<int>>& queries) {
+        int Length = nums[0].length();    // Length of each number string
+        int n = nums.size();              // Total number of numbers
+        vector<vector<pair<string, int>>> vec(Length + 1);  // 1-based indexing for trims
+
+        // Populate vec with all possible trimmed versions of each number
+        for (int i = 0; i < n; i++) {
+            for (int j = 1; j <= Length; j++) {  // Trim lengths from 1 to Length
+                string sub = nums[i].substr(Length - j, j);  // Extract last j characters
+                vec[j].emplace_back(sub, i);                // Store as pair (trimmed string, original index)
+            }
+        }
+
+        // Vector to keep track of which trim lengths have been sorted
+        vector<bool> sortedFlag(Length + 1, false);
+        
+        vector<int> ANS;                    // To store answers to each query
+        ANS.reserve(queries.size());        // Reserve space to optimize performance
+        
+        // Process each query
+        for (auto& query : queries) {
+            int k = query[0];               // The k-th smallest
+            int trimLen = query[1];         // The trim length
+
+            // Boundary check for trimLen
+            if (trimLen < 1 || trimLen > Length){
+                ANS.push_back(-1);          // Append -1 or handle as per problem's requirement
+                continue;
+            }
+
+            // If this trim length hasn't been sorted yet, sort it now
+            if (!sortedFlag[trimLen]){
+                // Sort by trimmed string; if equal, sort by original index to maintain stability
+                sort(vec[trimLen].begin(), vec[trimLen].end(), [&](const pair<string, int>& a, const pair<string, int>& b) -> bool{
+                    if (a.first != b.first)
+                        return a.first < b.first;
+                    return a.second < b.second;
+                });
+                sortedFlag[trimLen] = true; // Mark as sorted
+            }
+
+            // Check if k is within bounds
+            if (k <= vec[trimLen].size()){
+                ANS.push_back(vec[trimLen][k-1].second); // Append the original index of the k-th smallest trimmed number
+            }
+            else{
+                ANS.push_back(-1); // Append -1 or handle as per problem's requirement
+            }
+        }
+
+        return ANS; // Return the list of answers
+    }
+};

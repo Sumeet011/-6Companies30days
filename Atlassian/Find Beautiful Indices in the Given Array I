@@ -1,0 +1,56 @@
+Question : Find Beautiful Indices in the Given Array I
+
+Description : You are given a 0-indexed string s, a string a, a string b, and an integer k.
+An index i is beautiful if:
+0 <= i <= s.length - a.length
+s[i..(i + a.length - 1)] == a
+There exists an index j such that:
+0 <= j <= s.length - b.length
+s[j..(j + b.length - 1)] == b
+|j - i| <= k
+Return the array that contains beautiful indices in sorted order from smallest to largest.
+
+Solution : class Solution {
+public:
+    vector<int> beautifulIndices(string s, string a, string b, int k) {
+        deque<char> P(a.begin(), a.end());
+        deque<char> Q(b.begin(), b.end());
+        deque<char> First;
+        deque<char> Second;
+        vector<int> First_m;
+        vector<int> Second_m;
+        
+        for (int i = 0; i < s.length(); i++) {
+            First.push_back(s.at(i));
+            Second.push_back(s.at(i));
+
+            if (First.size() > a.length()) {
+                First.pop_front();
+            }
+            if (Second.size() > b.length()) {
+                Second.pop_front();
+            }
+
+            if (First == P) {
+                First_m.push_back(i + 1 - a.length());
+            }
+
+            if (Second == Q) {
+                Second_m.push_back(i + 1 - b.length());
+            }
+        }
+
+        vector<int> ans;
+        sort(Second_m.begin(), Second_m.end());
+
+        for (int x : First_m) {
+            auto it = lower_bound(Second_m.begin(), Second_m.end(), x - k);
+            if (it != Second_m.end() && *it <= x + k) {
+                ans.push_back(x);
+            }
+        }
+
+        return ans;
+    }
+};
+

@@ -1,0 +1,54 @@
+Question : K Divisible Elements Subarrays
+
+Description : Given an integer array nums and two integers k and p, return the number of distinct subarrays, which have at most k elements that are divisible by p.
+Two arrays nums1 and nums2 are said to be distinct if:
+They are of different lengths, or
+There exists at least one index i where nums1[i] != nums2[i].
+A subarray is defined as a non-empty contiguous sequence of elements in an array.
+
+ Solution : class Solution {
+public:
+    int countDistinct(vector<int>& nums, int k, int p) {
+        int L = 0;
+        int R = 0;
+        int cnt = 0;
+        int ans = 0;
+        unordered_set<string> subarrays;  // To keep track of distinct subarrays
+
+        while (R < nums.size()) {
+            if (nums[R] % p == 0) {
+                cnt++;
+            }
+
+            // If we exceed 'k' divisible elements, move 'L' to reduce the count
+            while (cnt > k) {
+                if (nums[L] % p == 0) {
+                    cnt--;
+                }
+                L++;
+            }
+
+            // If we have exactly 'k' divisible elements, count distinct subarrays
+            if (cnt == k) {
+                for (int i = L; i <= R; i++) {
+                    string subarray = "";
+                    for (int j = i; j <= R; j++) {
+                        subarray += to_string(nums[j]) + ",";
+                        subarrays.insert(subarray); // Insert the subarray into the set
+                    }
+                }
+            }
+            R++;
+        }
+        if(L!=R){
+             for (int i = L; i < R; i++) {
+                    string subarray = "";
+                    for (int j = i; j < R; j++) {
+                        subarray += to_string(nums[j]) + ",";
+                        subarrays.insert(subarray); // Insert the subarray into the set
+                    }
+                }
+        }
+        return subarrays.size();  // Return the count of distinct subarrays
+    }
+};

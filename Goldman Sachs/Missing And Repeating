@@ -1,0 +1,28 @@
+Question : Missing And Repeating
+
+Given an unsorted array arr of positive integers. One number a from the set [1, 2,....,n] is missing and one number b occurs twice in the array. Find numbers a and b.
+Note: The test cases are generated such that there always exists one missing and one repeating number within the range [1,n].
+
+Soltuion : class Solution {
+  public:
+    vector<int> findTwoElement(vector<int>& arr) {
+        int n = arr.size();
+        vector<int> nums(n+1, 0);  // Use size n+1 because array is 1-indexed
+        int missing = 0, repeated = 0;
+
+        for (int number : arr) {
+            nums[number]++;
+        }
+
+        for (int i = 1; i <= n; i++) {  // Iterate from 1 to n
+            if (nums[i] == 0) {
+                missing = i;
+            }
+            if (nums[i] == 2) {
+                repeated = i;
+            }
+        }
+
+        return vector<int> { repeated, missing };
+    }
+};

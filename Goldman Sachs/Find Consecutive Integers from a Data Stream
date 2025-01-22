@@ -1,0 +1,38 @@
+Question : Find Consecutive Integers from a Data Stream
+
+Description : For a stream of integers, implement a data structure that checks if the last k integers parsed in the stream are equal to value.
+Implement the DataStream class:DataStream(int value, int k) Initializes the object with an empty integer stream and the two integers value and k.
+boolean consec(int num) Adds num to the stream of integers. Returns true if the last k integers are equal to value, and false otherwise. If there are less than k integers, the condition does not hold true, so returns false.
+
+Solution : 
+class DataStream {
+    unordered_map<int, int> M;
+    deque<int> P;
+    int Match;
+    int size = 0;
+    int temp = 0;
+
+public:
+    DataStream(int value, int k) {
+        Match = value;
+        size = k;
+    }
+    
+    bool consec(int num) {
+        M[num]++;
+        P.push_back(num);
+        temp++;
+        
+        if (temp == size) {
+            bool result = false;
+            if (M[Match] == size) {
+                result = true;
+            }
+            M[P.front()]--;
+            P.pop_front();
+            temp--;
+            return result;
+        }
+        return false;
+    }
+};

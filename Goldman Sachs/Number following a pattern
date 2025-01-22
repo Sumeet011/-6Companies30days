@@ -1,0 +1,30 @@
+Question : Number following a pattern
+
+Description : Given a pattern containing only I's and D's. I for increasing and D for decreasing. Devise an algorithm to print the minimum number following that pattern. Digits from 1-9 and digits can't repeat.
+
+Solution : class Solution{   
+public:
+     string printMinNumberForPattern(string S){
+        int n=S.size();
+        string initial;
+        for(char i='1';i<='1'+n;i++){
+            initial.push_back(i);
+        }
+        int j=0;
+        int i=0;
+        while(i<n){
+            if(S[i]=='I') {j++; i++;}
+            else{
+            int D=j;
+            while (i<n&&S[i]=='D'){
+                i++;
+                j++;
+                
+            }
+            reverse(initial.begin()+D,initial.begin()+j+1);
+            }
+            
+        }
+         return initial;
+    }
+};
